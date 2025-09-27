@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class BlackList extends Model
+{
+    use SoftDeletes;
+
+    protected $table = 'blacklists';
+
+    protected $fillable = [
+        'plate_number',
+        'reason',
+        'direction_in',
+        'direction_out',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted_at',
+        'deleted_by',
+    ];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+}
