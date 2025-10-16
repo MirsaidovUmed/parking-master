@@ -36,6 +36,13 @@ return [
             'throw' => false,
         ],
 
+        'photos' => [
+            'driver' => 'local',
+            'root' => env('PHOTOS_PATH', public_path('photos')),
+            'url' => env('PHOTOS_URL', '/photos'),
+            'visibility' => 'public',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -57,6 +64,7 @@ return [
         ],
 
     ],
+    
 
     /*
     |--------------------------------------------------------------------------

@@ -53,18 +53,24 @@ class AccessSeeder extends Seeder
             ['name' => 'Удалить черный список', 'category' => 'Черный список', 'guard_name' => 'web'],
 
             //Доступы для раздела Подписка. --- CRUD Доступы
-            ['name' => 'Просмотр подписка', 'category' => 'Подписка', 'guard_name' => 'web'],
-            ['name' => 'Добавить подписка', 'category' => 'Подписка', 'guard_name' => 'web'],
-            ['name' => 'Изменить подписка', 'category' => 'Подписка', 'guard_name' => 'web'],
-            ['name' => 'Удалить подписка', 'category' => 'Подписка', 'guard_name' => 'web'],
+            ['name' => 'Просмотр подписок', 'category' => 'Подписки', 'guard_name' => 'web'],
+            ['name' => 'Добавить подписку', 'category' => 'Подписки', 'guard_name' => 'web'],
+            ['name' => 'Изменить подписку', 'category' => 'Подписки', 'guard_name' => 'web'],
+            ['name' => 'Удалить подписку', 'category' => 'Подписки', 'guard_name' => 'web'],
             //Доступы для под раздела История подписка.
-            ['name' => 'История подписка', 'category' => 'Подписка', 'guard_name' => 'web'],
+            ['name' => 'История подписок', 'category' => 'Подписки', 'guard_name' => 'web'],
 
             //Доступы для раздела Тарифы. --- CRUD Доступы
             ['name' => 'Просмотр тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
             ['name' => 'Создание тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
             ['name' => 'Изменить тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
             ['name' => 'Удалить тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
+
+            //Доступы для раздела Шлагбаумы. --- CRUD Шлагбаумы
+            ['name' => 'Просмотр шлагбаумов', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],
+            ['name' => 'Создать шлагбаум', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],
+            ['name' => 'Изменить шлагбаум', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],
+            ['name' => 'Удалить шлагбаум', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],
 
             ['name' => 'Просмотр платежей', 'category' => 'Платежи', 'guard_name' => 'web'],
 

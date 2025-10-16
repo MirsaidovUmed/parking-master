@@ -24,7 +24,7 @@
             @endcan
 
             @php
-                $linkActiveParkingHistory = ['parking_history*'];
+                $linkActiveParkingHistory = ['parking_history/index*'];
             @endphp
             @can('Просмотр истории парковок')
                 <a href="{{route('parking_history.index')}}"
@@ -65,6 +65,16 @@
             @endcan
 
             @php
+                $linkActiveBarriers = ['barriers*'];
+            @endphp
+            @can('Просмотр шлагбаумов')
+                <a href="{{ route('barriers.index') }}"
+                   class="nav-item nav-link {{ request()->is($linkActiveBarriers) ? 'active' : '' }}">
+                    <i class="fa fa-door-open me-2"></i>Шлагбаумы
+                </a>
+            @endcan
+
+            @php
                 $linkActivePayment = ['payment*'];
             @endphp
             @can('Просмотр платежей')
@@ -77,10 +87,10 @@
             @php
                 $linkActiveSubscription = ['subscription*'];
             @endphp
-            @can('Просмотр подписка')
+            @can('Просмотр подписок')
                 <a href="{{route('subscription.index')}}"
                    class="nav-item nav-link {{ request()->is($linkActiveSubscription) ? 'active' : '' }}">
-                    <i class="fa fa-receipt me-2"></i>Подписка
+                    <i class="fa fa-receipt me-2"></i>Подписки
                 </a>
             @endcan
 
@@ -100,11 +110,17 @@
                     </div>
                 </a>
             @endcanany
-            <a href="" class="nav-item nav-link">
-                <i class="fa fa-camera me-2"></i>Фотофиксация
-            </a>
-            <hr>
-            <a href="" class="nav-item nav-link">
+            @php
+                $linkActivePhotos = ['parking_history/photos*'];
+            @endphp
+            @can('Просмотр истории парковок')
+                <a href="{{ route('parking_history.photosList') }}"
+                class="nav-item nav-link {{ request()->is($linkActivePhotos) ? 'active' : '' }}">
+                    <i class="fa fa-camera me-2"></i>Фотофиксация
+                </a>
+            @endcan
+            {{-- <hr> --}}
+            {{-- <a href="" class="nav-item nav-link">
                 <div style="display: flex">
                     <div>
                         <i class="fa fa-cogs me-2"></i>
@@ -113,7 +129,7 @@
                         Настройка системы
                     </div>
                 </div>
-            </a>
+            </a> --}}
         </div>
     </nav>
 </div>

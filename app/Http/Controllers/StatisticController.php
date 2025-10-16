@@ -8,7 +8,7 @@ class StatisticController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:Просмотр статистика', ['only' => ['index']]);
+        $this->middleware('permission:Просмотр статистики', ['only' => ['index']]);
     }
 
     public function index()

@@ -18,6 +18,8 @@ class Subscription extends Model
         'deleted_by',
     ];
 
+    protected $dates = ['deleted_at'];
+
     public function histories()
     {
         return $this->hasMany(SubscriptionHistory::class);

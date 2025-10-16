@@ -11,27 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
+        Schema::create('barriers', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 64)->unique()->index();
-            $table->integer('cost');
-            $table->string('p0')->nullable();
-            $table->string('p1')->nullable();
-            $table->string('p2')->nullable();
-            $table->string('p3')->nullable();
-            $table->string('p4')->nullable();
-            $table->string('p5')->nullable();
-            $table->string('p6')->nullable();
-            $table->string('p7')->nullable();
-            $table->string('p8')->nullable();
-            $table->string('p9')->nullable();
-            $table->string('p10')->nullable();
+            $table->string('name', 128)->nullable();
+            $table->unsignedSmallInteger('barrierport');
+            $table->enum('direction', ['in', 'out']);
+            $table->enum('mode', ['auto', 'manual'])->default('auto');
+            $table->enum('status', ['opened', 'closed', 'none'])->nullable()->default('none');
+
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('created_by');
             $table->timestamp('updated_at')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->unsignedBigInteger('deleted_by')->nullable();
+
+            $table->unique(['barrierport', 'direction']);
         });
     }
 
@@ -40,6 +35,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('barriers');
     }
 };
+
+

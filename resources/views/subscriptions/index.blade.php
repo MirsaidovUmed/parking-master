@@ -9,22 +9,22 @@
             <div class="cl-2">
                 <ul class="navbar-main-submenu">
                     <li class="align-items-center text-danger" style="padding: 15px 15px;">
-                        <h4>Подписка</h4>
+                        <h4>Подписки</h4>
                     </li>
-                    @can('История подписка')
-                        <li style="display: flex; justify-content: flex-end; width: 90%;">
-                            <a href="{{route('subscription.history')}}" style="margin-top: 5px">
-                                <button type="button" class="btn btn-info float-start p-sm-3 border-0">
-                                    История подписка
+                    @can('История подписок')
+                        <li style="display: flex; justify-content: flex-end; width: 80%;">
+                            <a href="{{route('subscription.history')}}" style="margin-top: 10px">
+                                <button type="button" class="btn btn-info float-start p-sm-4 border-0">
+                                    История подписок
                                 </button>
                             </a>
                         </li>
                     @endcan
-                    @can('Добавить подписка')
+                    @can('Добавить подписку')
                         <li style="display: flex; justify-content: flex-end; width: 25%;">
-                            <button type="button" class="btn btn-primary float-start p-sm-3 border-0"
+                            <button type="button" class="btn btn-primary float-start p-sm-1 border-0"
                                     data-bs-toggle="modal" data-bs-target="#storePriceModal">
-                                Создать подписка
+                                Создать подписку
                             </button>
                         </li>
                     @endcan
@@ -34,19 +34,19 @@
                      aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content p-5">
-                            <h5 class="modal-title pb-4" id="storePriceModalLabel">Создание подписка</h5>
+                            <h5 class="modal-title pb-4" id="storePriceModalLabel">Создание подписки</h5>
                             <form method="post" action="{{ route('subscription.store') }}" enctype="multipart/form-data"
                                   novalidate>
                                 @csrf
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                           name="name" id="name" placeholder="Название подписка" required>
+                                           name="name" id="name" placeholder="Название подписки" required>
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                     @enderror
-                                    <label>Название подписка</label>
+                                    <label>Название подписки</label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control"
@@ -82,7 +82,7 @@
                         <th scope="col">№</th>
                         <th scope="col">Название</th>
                         <th scope="col">Сумма</th>
-                        @canany(['Изменить подписка', 'Удалить подписка'])
+                        @canany(['Изменить подписку', 'Удалить подписку'])
                             <th scope="col">Действия</th>
                         @endcanany
                     </tr>
@@ -95,20 +95,19 @@
                                 <td>{{$item->name}}</td>
                                 <td>{{$item->cost}}</td>
                                 <td>
-                                    @can('Изменить подписка')
+                                    @can('Изменить подписку')
                                         <a href="{{ url('subscription/edit/'. $item->id) }}" class="btn">
                                             <i class="fa"><img src="{{ asset('images/edit.svg') }}" alt="editor"></i>
                                         </a>
                                     @endcan
 
-                                    @can('Удалить подписка')
-                                        <form method="POST" action="{{ url('subscription/delete/' . $item->id) }}"
-                                              style="display: inline-block">
+                                    @can('Удалить подписку')
+                                        <form method="POST" action="{{ route('subscription.delete', $item->id) }}" style="display: inline-block">
                                             @csrf
-                                            <input type="hidden" name="_method" value="delete">
-                                            <button type="submit" class="btn"><i class="fa"><img
-                                                        src="{{ asset('images/delete.svg') }}"
-                                                        alt="deleted"></i></button>
+                                            @method('DELETE')
+                                            <button type="submit" class="btn">
+                                                <i class="fa"><img src="{{ asset('images/delete.svg') }}" alt="deleted"></i>
+                                            </button>
                                         </form>
                                     @endcan
                                 </td>

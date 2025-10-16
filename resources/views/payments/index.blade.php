@@ -27,7 +27,7 @@
                                 <td>{{ $payment->payment_amount }}</td>
                                 <td>{{ $payment->payment_status }}</td>
                                 <td>{{ $payment->payment_bank }}</td>
-                                <td>{{ $payment->request_id }}</td>
+                                <td>{{ $payment->payment_dc_order_id }}</td>
                             </tr>
                         @endforeach
                         </tbody>

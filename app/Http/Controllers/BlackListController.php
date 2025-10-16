@@ -26,7 +26,7 @@ class BlackListController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'plate_number'   => 'required|string|max:32|unique:blacklists,plate_number',
+            'plate_number'   => 'required|string|max:32',
             'reason'         => 'nullable|string|max:256',
             'direction_in'   => 'nullable|in:on,1,0',
             'direction_out'  => 'nullable|in:on,1,0',
@@ -60,7 +60,7 @@ class BlackListController extends Controller
             'reason'        => $request->reason,
             'direction_in'  => $request->has('direction_in') ? 1 : 0,
             'direction_out' => $request->has('direction_out') ? 1 : 0,
-            'created_by'    => Auth::id() ?? 1,
+            'updated_by'    => Auth::id() ?? 1,
         ]);
 
         return redirect()->back()->with('success', 'Номер успешно успешно обновлен');

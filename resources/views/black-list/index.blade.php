@@ -128,11 +128,11 @@
                             <textarea class="form-control bg-secondary text-light border-0" id="reason" name="reason" rows="2"></textarea>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="direction_in" name="direction_in" value="1" {{ $item->direction_in ? 'checked' : '' }}>
+                            <input class="form-check-input" type="checkbox" id="direction_in" name="direction_in" value="1">
                             <label class="form-check-label" for="direction_in">Запретить въезд</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="direction_out" name="direction_out" value="1" {{ $item->direction_out ? 'checked' : '' }}>
+                            <input class="form-check-input" type="checkbox" id="direction_out" name="direction_out" value="1">
                             <label class="form-check-label" for="direction_out">Запретить выезд</label>
                         </div>
                     </div>
