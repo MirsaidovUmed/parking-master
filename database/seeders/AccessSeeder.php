@@ -74,6 +74,7 @@ class AccessSeeder extends Seeder
 
             ['name' => 'Просмотр платежей', 'category' => 'Платежи', 'guard_name' => 'web'],
 
+            ['name' => 'Просмотр настройка системы', 'category' => 'Платежи', 'guard_name' => 'web'],
         ];
 
         foreach ($data as $row) {

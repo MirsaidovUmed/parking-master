@@ -78,7 +78,7 @@
                 $linkActivePayment = ['payment*'];
             @endphp
             @can('Просмотр платежей')
-                <a href="{{route('payment.index')}}" 
+                <a href="{{route('payment.index')}}"
                    class="nav-item nav-link {{ request()->is($linkActivePayment) ? 'active' : '' }}">
                     <i class="fa fa-credit-card me-2"></i>Платежи
                 </a>
@@ -119,17 +119,15 @@
                     <i class="fa fa-camera me-2"></i>Фотофиксация
                 </a>
             @endcan
-            {{-- <hr> --}}
-            {{-- <a href="" class="nav-item nav-link">
-                <div style="display: flex">
-                    <div>
-                        <i class="fa fa-cogs me-2"></i>
-                    </div>
-                    <div>
-                        Настройка системы
-                    </div>
-                </div>
-            </a> --}}
+            @php
+                $linkActiveSettings = ['settings*'];
+            @endphp
+            @can('Просмотр настройка системы')
+                <a href="{{ route('settings.index') }}"
+                   class="nav-item nav-link {{ request()->is($linkActiveSettings) ? 'active' : '' }}">
+                    <i class="fa fa-cogs me-2"></i>Настройки системы
+                </a>
+            @endcan
         </div>
     </nav>
 </div>

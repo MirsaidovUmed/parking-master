@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarrierController;
 use App\Http\Controllers\WhitelistController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SettingsController;
 
 /*
 |-------------------------------------------------------------------------
@@ -140,5 +141,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/live/{id}/open', 'liveOpen')->name('barriers.live.open');
             Route::post('/live/{id}/close', 'liveClose')->name('barriers.live.close');
             Route::post('/live/{id}/exit', 'liveExit')->name('barriers.live.exit');
+    });
+
+    Route::prefix('settings')
+        ->controller(SettingsController::class)
+        ->group(function () {
+            Route::get('/index', 'index')->name('settings.index');
+            Route::post('/update', 'update')->name('settings.update');
         });
 });
