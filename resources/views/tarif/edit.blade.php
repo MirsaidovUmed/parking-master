@@ -50,6 +50,22 @@
                         @enderror
                     </div>
 
+                    {{-- Зона --}}
+                    <div class="mb-3">
+                        <label class="form-label">Зона</label>
+                        <select name="zone_id" class="form-select @error('zone_id') is-invalid @enderror" required>
+                            <option value="" disabled {{ old('zone_id', $tariff->zone_id) ? '' : 'selected' }}>Выберите зону</option>
+                            @foreach($zones as $zone)
+                                <option value="{{ $zone->id }}" {{ old('zone_id', $tariff->zone_id) == $zone->id ? 'selected' : '' }}>
+                                    {{ $zone->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('zone_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Минута --}}
                     <div class="mb-3">
                         <label class="form-label">Минута</label>

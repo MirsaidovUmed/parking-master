@@ -65,6 +65,16 @@
             @endcan
 
             @php
+                $linkActiveZone = ['zone*'];
+            @endphp
+            @can('Просмотр черный список')
+                <a href="{{route('zone.index')}}"
+                   class="nav-item nav-link {{ request()->is($linkActiveZone) ? 'active' : '' }}">
+                    <i class="fa fa-ban me-2"></i>Зоны
+                </a>
+            @endcan
+
+            @php
                 $linkActiveBarriers = ['barriers*'];
             @endphp
             @can('Просмотр шлагбаумов')

@@ -18,9 +18,15 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->integer('step_start')->nullable();
             $table->integer('step_end')->nullable();
-            $table->float('coefficient', 10,2);
-            $table->float('coefficient_per_step', 10,2);
+            $table->float('coefficient', 10,2)->nullable();
+            $table->float('coefficient_per_step', 10,2)->nullable();
             $table->integer('minute')->nullable();
+
+            // 🔹 связь с зоной
+            $table->unsignedBigInteger('zone_id')->nullable();
+            $table->foreign('zone_id')->references('id')->on('zones')->onDelete('set null');
+
+            // 🔹 шаги
             $table->string('p0')->nullable();
             $table->string('p1')->nullable();
             $table->string('p2')->nullable();
@@ -32,11 +38,12 @@ return new class extends Migration
             $table->string('p8')->nullable();
             $table->string('p9')->nullable();
             $table->string('p10')->nullable();
-            $table->timestamp('created_at')->useCurrent();
+
+            // 🔹 служебные поля
+            $table->timestamps();
             $table->unsignedBigInteger('created_by');
-            $table->timestamp('updated_at')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
-            $table->timestamp('deleted_at')->nullable();
+            $table->softDeletes();
             $table->unsignedBigInteger('deleted_by')->nullable();
         });
     }

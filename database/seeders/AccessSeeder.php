@@ -66,6 +66,12 @@ class AccessSeeder extends Seeder
             ['name' => 'Изменить тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
             ['name' => 'Удалить тариф', 'category' => 'Тариф', 'guard_name' => 'web'],
 
+            //Доступы для раздела Зоны. --- CRUD Шлагбаумы
+            ['name' => 'Просмотр зоны', 'category' => 'Зона', 'guard_name' => 'web'],
+            ['name' => 'Создание зоны', 'category' => 'Зона', 'guard_name' => 'web'],
+            ['name' => 'Изменить зону', 'category' => 'Зона', 'guard_name' => 'web'],
+            ['name' => 'Удалить зону', 'category' => 'Зона', 'guard_name' => 'web'],
+
             //Доступы для раздела Шлагбаумы. --- CRUD Шлагбаумы
             ['name' => 'Просмотр шлагбаумов', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],
             ['name' => 'Создать шлагбаум', 'category' => 'Шлагбаумы', 'guard_name' => 'web'],

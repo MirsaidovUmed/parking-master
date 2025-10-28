@@ -40,6 +40,16 @@
                 </div>
 
                 <div class="form-floating mb-3">
+                    <select class="form-select" id="tariffZone" required>
+                        <option value="" selected disabled>Выберите зону</option>
+                        @foreach($zones as $zone)
+                            <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                        @endforeach
+                    </select>
+                    <label>Зона тарифа</label>
+                </div>
+
+                <div class="form-floating mb-3">
                     <input type="number" class="form-control" id="stepsCount" min="1" max="10" placeholder="Количество шагов" required>
                     <label>Количество шагов</label>
                 </div>
@@ -67,6 +77,7 @@
                 <input type="hidden" name="name" id="finalName">
                 <input type="hidden" name="steps" id="finalSteps">
                 <input type="hidden" name="stepTime" id="finalStepTime">
+                <input type="hidden" name="zone_id" id="finalZoneId">
 
                 <div id="stepsContainer" class="mb-3"></div>
 
@@ -87,6 +98,16 @@
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="tariffNameExtended" placeholder="Название" required>
                     <label>Название тарифа</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <select class="form-select" id="tariffZoneExtended" required>
+                        <option value="" selected disabled>Выберите зону</option>
+                        @foreach($zones as $zone)
+                            <option value="{{ $zone->id }}">{{ $zone->name }}</option>
+                        @endforeach
+                    </select>
+                    <label>Зона тарифа</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -118,6 +139,7 @@
                 <input type="hidden" name="name" id="finalNameExtended">
                 <input type="hidden" name="steps" id="finalStepsExtended">
                 <input type="hidden" name="stepTime" id="finalStepTimeExtended">
+                <input type="hidden" name="zone_id" id="finalZoneIdExtended">
 
                 <div id="stepsContainerExtended" class="mb-3"></div>
 
@@ -170,6 +192,7 @@
                         <th scope="col">Интервал (мин)</th>
                         <th scope="col">Цена</th>
                         <th scope="col">Коэффициент</th>
+                        <th scope="col">Зона</th>
                         <th scope="col">Статус</th>
                         <th scope="col">Дата создания</th>
                         <th scope="col">Действия</th>
@@ -188,6 +211,7 @@
                             <td>{{ $item->step_start }} - {{ $item->step_end }} мин</td>
                             <td>{{ $item->price_display }} сом</td>
                             <td>{{ $item->coefficient }}</td>
+                            <td>{{ $item->zone->name ?? '—' }}</td>
                             <td>{{ $item->is_active ? 'Активный' : 'Неактивный' }}</td>
                             <td>{{ $item->created_at->format('d.m.Y H:i') }}</td>
                             <td>
@@ -230,8 +254,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = document.getElementById('tariffName').value;
             const steps = parseInt(document.getElementById('stepsCount').value);
             const stepTime = parseInt(document.getElementById('stepTime').value);
+            const zoneId = parseInt(document.getElementById('tariffZone').value);
 
-            if (!name || !steps || !stepTime) {
+            if (!name || !zoneId || !steps || !stepTime) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -239,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('finalName').value = name;
             document.getElementById('finalSteps').value = steps;
             document.getElementById('finalStepTime').value = stepTime;
+            document.getElementById('finalZoneId').value = zoneId;
 
             let container = document.getElementById('stepsContainer');
             container.innerHTML = '';
@@ -277,8 +303,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = document.getElementById('tariffNameExtended').value;
             const steps = parseInt(document.getElementById('stepsCountExtended').value);
             const stepTime = parseInt(document.getElementById('stepTimeExtended').value);
+            const zoneId = parseInt(document.getElementById('tariffZoneExtended').value);
 
-            if (!name || !steps || !stepTime) {
+            if (!name || !steps || !stepTime || !zoneId) {
                 alert('Пожалуйста, заполните все поля');
                 return;
             }
@@ -286,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('finalNameExtended').value = name;
             document.getElementById('finalStepsExtended').value = steps;
             document.getElementById('finalStepTimeExtended').value = stepTime;
+            document.getElementById('finalZoneIdExtended').value = zoneId;
 
             let container = document.getElementById('stepsContainerExtended');
             container.innerHTML = '';

@@ -13,6 +13,7 @@ use App\Http\Controllers\TariffController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BarrierController;
 use App\Http\Controllers\WhitelistController;
+use App\Http\Controllers\ZoneController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SettingsController;
 
@@ -142,6 +143,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/live/{id}/close', 'liveClose')->name('barriers.live.close');
             Route::post('/live/{id}/exit', 'liveExit')->name('barriers.live.exit');
     });
+
+    Route::prefix('zone')
+        ->controller(ZoneController::class)
+        ->group(function () {
+            Route::get('/index', 'index')->name('zone.index');
+            Route::post('/store', 'store')->name('zone.store');
+            Route::put('/update/{id}', 'update')->name('zone.update');
+            Route::delete('/delete/{id}', 'destroy')->name('zone.delete');
+        });
 
     Route::prefix('settings')
         ->controller(SettingsController::class)

@@ -21,10 +21,18 @@ class Tariff extends Model
         'created_by',
         'updated_by',
         'deleted_by',
+        'coefficient',
+        'minute',
+        'zone_id',
     ];
 
     // касты — если нужно, можно добавить
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
+    }
 }

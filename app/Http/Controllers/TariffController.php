@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CurrencyHelper;
 use App\Models\Tariff;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Services\RabbitMQService;
+use Illuminate\Support\Facades\Log;
 
 class TariffController extends Controller
 {
@@ -33,7 +36,9 @@ class TariffController extends Controller
             $tariff->price_display = CurrencyHelper::toSomoni($tariff->price_per_step);
         }
 
-        return view('tarif.index', compact('listTarif'));
+        $zones = Zone::paginate(10);
+
+        return view('tarif.index', compact('listTarif', 'zones'));
     }
 
     /**
@@ -52,14 +57,16 @@ class TariffController extends Controller
             'is_extended'      => 'nullable|in:1',
             'coefficient'      => 'nullable|numeric|min:0',
             'minute'           => 'nullable|integer|min:0',
+            'zone_id'          => 'nullable|exists:zones,id',
         ]);
 
+        $zone = Zone::findOrFail($validated['zone_id']);
         $baseName       = $validated['name'];
         $stepsCount     = (int) $validated['steps'];
         $stepTime       = (int) $validated['stepTime'];
         $price_per_steps = $validated['price_per_steps'];
         $isExtended     = isset($validated['is_extended']);
-        
+
         $coefficientValue = $isExtended && isset($validated['coefficient']) ? $validated['coefficient'] : null;
         $minuteValue      = $isExtended && isset($validated['minute']) ? (int)$validated['minute'] : null;
 
@@ -113,6 +120,7 @@ class TariffController extends Controller
                 'coefficient'    => $coefficientValue,
                 'minute'         => $minuteValue,
                 'p10'            => $generationKey,
+                'zone_id'        => $zone->id,
                 'created_by'     => Auth::id() ?? 1,
                 'created_at'     => now(),
                 'updated_at'     => now(),
@@ -122,6 +130,21 @@ class TariffController extends Controller
         }
 
         Tariff::insert($data);
+
+        try {
+            $rabbit = new RabbitMQService();
+
+            $payload = [
+                'event' => 'tariff.created',
+                'timestamp' => now()->toISOString(),
+                'tariffs' => $data,
+            ];
+
+            $rabbit->publish('tariff.created', $payload);
+            Log::info('RabbitMQ: Тарифы отправлены', $payload);
+        } catch (\Throwable $e) {
+            Log::error('Ошибка отправки в RabbitMQ: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', "Тарифы успешно созданы");
     }
@@ -145,7 +168,9 @@ class TariffController extends Controller
             }
         }
 
-        return view('tarif.edit', compact('tariff'));
+        $zones = Zone::paginate(10);
+
+        return view('tarif.edit', compact('tariff', 'zones'));
     }
 
     /**
@@ -163,6 +188,7 @@ class TariffController extends Controller
             'is_active' => 'nullable|in:0,1',
             'coefficient' => 'nullable|numeric|min:0',
             'minute' => 'nullable|integer|min:0',
+            'zone_id' => 'nullable|exists:zones,id',
         ];
 
         $stepsCount = $request->input('steps');
@@ -221,6 +247,7 @@ class TariffController extends Controller
                 $totalEnd = $end;
             }
 
+            // очистим оставшиеся p
             for ($j = $stepsCount; $j <= 10; $j++) {
                 $updateData["p{$j}"] = null;
             }
@@ -244,7 +271,7 @@ class TariffController extends Controller
             $tariff->update(array_merge($updateData, ['name' => $validated['name']]));
         }
 
-        // Обновляем всю группу, если есть p10
+        // --- Обновляем всю группу, если есть p10 ---
         $groupKey = $tariff->p10;
         if ($groupKey) {
             $allTariffs = Tariff::where('p10', $groupKey)->get();
@@ -252,7 +279,10 @@ class TariffController extends Controller
                 $newName = $validated['name'] . '-' . $t->id;
                 $groupUpdate = [
                     'name' => $newName,
-                    'is_active' => $request->has('is_active') ? (int) $request->input('is_active') : $t->is_active,
+                    'zone_id' => $validated['zone_id'],
+                    'is_active' => $request->has('is_active')
+                        ? (int) $request->input('is_active')
+                        : $t->is_active,
                     'updated_by' => Auth::id() ?? 1,
                     'updated_at' => now(),
                 ];
@@ -262,12 +292,30 @@ class TariffController extends Controller
                 if ($minuteValue !== null) {
                     $groupUpdate['minute'] = $minuteValue;
                 }
+
                 $t->update($groupUpdate);
             }
         }
 
+        // --- RabbitMQ ---
+        try {
+            $rabbit = new RabbitMQService();
+
+            $payload = [
+                'event' => 'tariff.updated',
+                'timestamp' => now()->toISOString(),
+                'tariff_id' => $tariff->id,
+                'data' => $updateData,
+            ];
+
+            $rabbit->publish('tariff.updated', $payload);
+            Log::info('RabbitMQ: Обновлён тариф ID=' . $tariff->id);
+        } catch (\Throwable $e) {
+            Log::error('Ошибка отправки в RabbitMQ: ' . $e->getMessage());
+        }
+
         return redirect()->route('tariff.index')
-            ->with('success', 'Тарифы успешно обновлены');
+            ->with('success', 'Тариф и зона успешно обновлены');
     }
 
     /**
@@ -291,6 +339,21 @@ class TariffController extends Controller
             $tariff->delete();
         }
 
+        try {
+            $rabbit = new RabbitMQService();
+
+            $payload = [
+                'event' => 'tariff.deleted',
+                'timestamp' => now()->toISOString(),
+                'tariff_id' => $id,
+            ];
+
+            $rabbit->publish('tariff.deleted', $payload);
+            Log::info('RabbitMQ: Удалён тариф ID=' . $id);
+        } catch (\Throwable $e) {
+            Log::error('Ошибка отправки в RabbitMQ: ' . $e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Тарифы успешно удалены');
     }
 
@@ -310,11 +373,11 @@ class TariffController extends Controller
             // если это JSON, распарсим
             $decoded = @json_decode($raw, true);
             if (is_array($decoded) && (isset($decoded['time']) || isset($decoded['price_per_step']))) {
-                
+
                 if (isset($decoded['price_per_step'])) {
                 $decoded['price_per_step_display'] = CurrencyHelper::toSomoni($decoded['price_per_step']);
                 }
-                
+
                 $res[] = [
                     'index' => $i,
                     'start' => $decoded['start'] ?? null,
