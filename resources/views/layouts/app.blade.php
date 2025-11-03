@@ -37,15 +37,37 @@
     </div>
     @include('layouts.menu')
     <style>
-        .navbar-main-submenu{
-            display:flex;
-            flex-direction:row;
-            width:100%;
-            padding-left:0;
-            margin-bottom:0;
-            list-style:none;
+        .navbar-main-submenu {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none;
             justify-content: space-between;
             margin-top: -20px;
+        }
+
+        /* 🔴 Кастомная стилизация кнопки "Шлагбаумы" */
+        .btn-barriers {
+            background-color: #dc3545 !important; /* красный */
+            color: #fff !important;
+            border: none;
+            transition: all 0.2s ease-in-out;
+            font-weight: 500;
+            box-shadow: 0 0 4px rgba(255, 0, 0, 0.3);
+        }
+
+        .btn-barriers:hover,
+        .btn-barriers:focus {
+            background-color: #c82333 !important; /* тёмно-красный при hover */
+            color: #fff !important;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-barriers i {
+            margin-right: 6px;
         }
     </style>
     <div class="container-fluid position-relative d-flex p-0">
@@ -59,9 +81,8 @@
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
                 </a>
-
                 <div class="navbar-nav align-items-center ms-auto">
-                    <div class="nav-item dropdown">
+                    {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-envelope me-lg-2"></i>
                             <span class="d-none d-lg-inline-flex">Message</span>
@@ -99,11 +120,11 @@
                             <hr class="dropdown-divider">
                             <a href="#" class="dropdown-item text-center">See all message</a>
                         </div>
-                    </div>
-                    <div class="nav-item dropdown">
+                    </div> --}}
+                    {{-- <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-bell me-lg-2"></i>
-                            <span class="d-none d-lg-inline-flex">Notificatin</span>
+                            <span class="d-none d-lg-inline-flex">Notification</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
                             <a href="#" class="dropdown-item">
@@ -121,9 +142,18 @@
                                 <small>15 minutes ago</small>
                             </a>
                             <hr class="dropdown-divider">
+                            
                             <a href="#" class="dropdown-item text-center">See all notifications</a>
                         </div>
-                    </div>
+                    </div> --}}
+                     {{-- 🔴 Кнопка "Шлагбаумы" слева от аватарки --}}
+                    @can('Просмотр шлагбаумов')
+                        <a href="{{ route('barriers.index') }}"
+                        class="btn btn-sm btn-barriers me-3 d-flex align-items-center">
+                            <i class="fa fa-door-open"></i>
+                            <span>Экстренно</span>
+                        </a>
+                    @endcan
                     <div class="navbar-nav align-items-center ms-auto">
                         <div class="nav-item">
 
@@ -181,5 +211,6 @@
 <script src="{{ asset('/js/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
 <script src="{{ asset('/js/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 <script src="{{ asset('/js/main.js') }}"></script>
+@stack('scripts')
 </body>
 </html>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title-page')
-    Подписка
+    Подписки
 @endsection
 
 @section('subtitle')
@@ -9,7 +9,7 @@
             <div class="cl-2">
                 <ul class="navbar-main-submenu">
                     <li class="align-items-center text-danger" style="padding: 15px 15px;">
-                        <h4><a href="{{url('subscription/history')}}">История подписка</a></h4>
+                        <h4><a href="{{url('subscription/history')}}">История подписок</a></h4>
                     </li>
                     <li>
                         <div class="search">
@@ -81,7 +81,7 @@
                     <thead style="color: #718096;">
                     <tr>
                         <th scope="col">№</th>
-                        <th scope="col">Номер ТС</th>
+                        <th scope="col">Гос.номер</th>
                         <th scope="col">Начало</th>
                         <th scope="col">Конец</th>
                         <th scope="col">Статус</th>

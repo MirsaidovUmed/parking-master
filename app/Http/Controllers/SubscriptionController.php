@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CurrencyHelper;
 use App\Models\Subscription;
 use App\Models\SubscriptionHistory;
 use Illuminate\Http\Request;
@@ -12,16 +13,22 @@ class SubscriptionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:Просмотр подписка', ['only' => ['index']]);
-        $this->middleware('permission:Добавить подписка', ['only' => ['store']]);
-        $this->middleware('permission:Изменить подписка', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:Удалить подписка', ['only' => ['destroy']]);
-        $this->middleware('permission:История подписка', ['only' => ['history']]);
+        $this->middleware('permission:Просмотр подписок', ['only' => ['index']]);
+        $this->middleware('permission:Добавить подписку', ['only' => ['store']]);
+        $this->middleware('permission:Изменить подписку', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:Удалить подписку', ['only' => ['destroy']]);
+        $this->middleware('permission:История подписок', ['only' => ['history']]);
     }
 
     public function index()
     {
-        $subscriptions = Subscription::paginate(10);
+        $subscriptions = Subscription::latest('id')->paginate(10);
+
+        // Преобразуем суммы в сомони для отображения
+        foreach ($subscriptions as $sub) {
+            $sub->cost = CurrencyHelper::toSomoni($sub->cost);
+        }
+
         return view('subscriptions.index', compact('subscriptions'));
     }
 
@@ -33,20 +40,29 @@ class SubscriptionController extends Controller
             $query->where('plate_number', $request->plate_number);
         }
 
-        $history = $query->paginate(10);
-        return view('subscriptions.history', compact('history'));
+        $listHistory = $query->paginate(10);
+
+        // Преобразуем суммы в сомони
+        foreach ($listHistory as $history) {
+            if ($history->subscription) {
+                $history->subscription->cost = CurrencyHelper::toSomoni($history->subscription->cost);
+            }
+        }
+
+        return view('subscriptions.history', compact('listHistory'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:64|unique:subscriptions,name',
-            'cost' => 'required|integer|min:0',
+            'cost' => 'required|numeric|min:0',
         ]);
 
         Subscription::create([
-            'name' => $request->name,
-            'cost' => $request->cost,
+            'name'       => $request->name,
+            // сохраняем в дирамах
+            'cost'       => CurrencyHelper::toDiram($request->cost),
             'created_by' => Auth::id(),
         ]);
 
@@ -56,6 +72,9 @@ class SubscriptionController extends Controller
     public function edit($id)
     {
         $subscription = Subscription::findOrFail($id);
+        // показываем в сомони
+        $subscription->cost = CurrencyHelper::toSomoni($subscription->cost);
+
         return view('subscriptions.edit', compact('subscription'));
     }
 
@@ -65,12 +84,13 @@ class SubscriptionController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:64|unique:subscriptions,name,' . $subscription->id,
-            'cost' => 'required|integer|min:0',
+            'cost' => 'required|numeric|min:0',
         ]);
 
         $subscription->update([
-            'name' => $request->name,
-            'cost' => $request->cost,
+            'name'       => $request->name,
+            // сохраняем в дирамах
+            'cost'       => CurrencyHelper::toDiram($request->cost),
             'updated_by' => Auth::id(),
         ]);
 
@@ -80,10 +100,13 @@ class SubscriptionController extends Controller
     public function destroy($id)
     {
         $subscription = Subscription::findOrFail($id);
-        $subscription->update([
-            'deleted_at' => Carbon::now(),
-            'deleted_by' => Auth::id(),
-        ]);
+
+        // сохраняем кто удалил
+        $subscription->deleted_by = Auth::id();
+        $subscription->save();
+
+        // выполняем soft delete (поставит deleted_at)
+        $subscription->delete();
 
         return redirect()->back()->with('success', 'Подписка успешно удалена');
     }

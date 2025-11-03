@@ -13,10 +13,21 @@ return new class extends Migration
     {
         Schema::create('blacklists', function (Blueprint $table) {
             $table->id();
-            $table->string('plate_number', 32)->unique()->index();
+            $table->string('plate_number', 32)->index();
             $table->string('reason', 256)->nullable();
-            $table->boolean('direction_in')->nullable();
-            $table->boolean('direction_out')->nullable();
+            $table->string('direction_in', 256)->nullable();
+            $table->string('direction_out', 256)->nullable();
+            $table->string('p0')->nullable();
+            $table->string('p1')->nullable();
+            $table->string('p2')->nullable();
+            $table->string('p3')->nullable();
+            $table->string('p4')->nullable();
+            $table->string('p5')->nullable();
+            $table->string('p6')->nullable();
+            $table->string('p7')->nullable();
+            $table->string('p8')->nullable();
+            $table->string('p9')->nullable();
+            $table->string('p10')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('created_by');
             $table->timestamp('updated_at')->nullable();

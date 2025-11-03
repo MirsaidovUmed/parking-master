@@ -10,23 +10,23 @@
             @endif
             <div class="bg-secondary rounded p-4">
                 <h6 class="mb-4">{{__('Изменить Тариф')}}</h6>
-                <form method="post" action="{{ url('subscription/update/' . $getSubscription->id) }}">
+                <form method="post" action="{{ url('subscription/update/' . $subscription->id) }}">
                     @csrf
                     @method('PUT')
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Название подписка</label>
+                        <label class="col-sm-2 col-form-label">Название подписки</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="name" value="{{$getSubscription->name}}" required/>
+                            <input type="text" class="form-control" name="name" value="{{$subscription->name}}" required/>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">Сумма</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" name="cost"
-                                   value="{{$getSubscription->cost}}" required/>
+                                   value="{{$subscription->cost}}" required/>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Обнавить</button>
+                    <button type="submit" class="btn btn-primary">Обновить</button>
                 </form>
             </div>
         </div>

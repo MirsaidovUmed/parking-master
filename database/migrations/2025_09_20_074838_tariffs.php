@@ -14,10 +14,24 @@ return new class extends Migration
         Schema::create('tariffs', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64)->unique();
-            $table->integer('price');
+            $table->integer('price_per_step')->nullable();
             $table->boolean('is_active')->default(true);
             $table->integer('step_start')->nullable();
             $table->integer('step_end')->nullable();
+            $table->float('coefficient', 10,2)->nullable();
+            $table->float('coefficient_per_step', 10,2)->nullable();
+            $table->integer('minute')->nullable();
+            $table->string('p0')->nullable();
+            $table->string('p1')->nullable();
+            $table->string('p2')->nullable();
+            $table->string('p3')->nullable();
+            $table->string('p4')->nullable();
+            $table->string('p5')->nullable();
+            $table->string('p6')->nullable();
+            $table->string('p7')->nullable();
+            $table->string('p8')->nullable();
+            $table->string('p9')->nullable();
+            $table->string('p10')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->unsignedBigInteger('created_by');
             $table->timestamp('updated_at')->nullable();

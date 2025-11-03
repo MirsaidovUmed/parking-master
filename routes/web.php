@@ -3,15 +3,16 @@
 use App\Http\Controllers\AccessController;
 use App\Http\Controllers\BlackListController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ParkingHistory;
+use App\Http\Controllers\ParkingHistoryController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SistemSettingsController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TariffController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BarrierController;
 use App\Http\Controllers\WhitelistController;
-use Faker\Provider\ar_EG\Payment;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -110,8 +111,35 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
     Route::prefix('parking_history')
-    ->controller(ParkingHistory::class)
+    ->controller(ParkingHistoryController::class)
     ->group(function () {
         Route::get('/index', 'index')->name('parking_history.index');
+        Route::get('/{id}/photos', 'photos')->name('parking_history.photos');
+        Route::get('/parking-history/{id}/download', 'download')->name('parking-history.download');
+        Route::get('/parking-history/{id}/download-all', 'downloadAll')->name('parking-history.downloadAll');
+
+         Route::get('/photos', 'photosList')->name('parking_history.photosList');
     });
+
+    Route::prefix('sistem_settings')
+    ->controller(SistemSettingsController::class)
+    ->group(function () {
+        Route::get('/index', 'index')->name('sistem_settings.index');
+    });
+
+    Route::prefix('barriers')
+        ->controller(BarrierController::class)
+        ->group(function () {
+            Route::get('/index', 'index')->name('barriers.index');
+            Route::post('/store', 'store')->name('barriers.store');
+            Route::get('/edit/{id}', 'edit')->name('barriers.edit');
+            Route::put('/update/{id}', 'update')->name('barriers.update');
+            Route::delete('/delete/{id}', 'destroy')->name('barriers.delete');
+            Route::post('/bulk', 'bulk')->name('barriers.bulk');
+            // Route::post('/live/enter', 'liveEnter')->name('barriers.live.enter');
+            Route::match(['get', 'post'], '/live/enter', 'liveEnter')->name('barriers.live.enter');
+            Route::match(['get', 'post'],'/live/{id}/open', 'liveOpen')->name('barriers.live.open');
+            Route::post('/live/{id}/close', 'liveClose')->name('barriers.live.close');
+            Route::post('/live/{id}/exit', 'liveExit')->name('barriers.live.exit');
+        });
 });

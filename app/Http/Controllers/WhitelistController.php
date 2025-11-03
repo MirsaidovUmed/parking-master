@@ -19,14 +19,14 @@ class WhitelistController extends Controller
 
     public function index()
     {
-        $getWhiteList = Whitelist::paginate(10);
+        $getWhiteList = Whitelist::latest('id')->paginate(10);
         return view('white-list.index', compact('getWhiteList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'plate_number' => 'required|string|max:32|unique:whitelists,plate_number',
+            'plate_number' => 'required|string|max:32',
             'reason'       => 'nullable|string|max:256',
         ]);
 
